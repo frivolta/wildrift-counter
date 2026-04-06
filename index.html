@@ -51,6 +51,7 @@ header p{font-size:11px;color:var(--text2);margin-top:2px}
 .counter-item .c-role{font-size:10px;color:var(--text2);text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--bg);margin-left:6px;flex-shrink:0}
 .counter-item .eff{font-size:11px;font-weight:600;margin-left:8px;flex-shrink:0}
 .eff.high{color:var(--green)}.eff.med{color:var(--orange)}.eff.low{color:var(--text2)}
+.counter-item .c-role.off-role{color:var(--orange);background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35)}
 
 /* Overlay dim */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -143,18 +144,12 @@ function showCounters(key) {
     .map(r => `<span class="role-tag">${ROLE_LABEL[r] || r}</span>`)
     .join('');
 
-  // Sort counters: mid-playable first, then by original order (effectiveness)
+  // Build counter list preserving original effectiveness order from data (no position bias)
   const counters = champ.counters.map((cKey, i) => {
     const cc = CHAMPIONS[cKey];
-    const role = cc ? getCounterRole(cKey, champ.roles) : 'mid';
-    const isMid = cc && cc.roles.includes('mid');
-    return { key: cKey, name: cc ? cc.name : cKey, role, isMid, idx: i };
-  });
-
-  // Sort: mid-capable first, then by original effectiveness order
-  counters.sort((a, b) => {
-    if (a.isMid !== b.isMid) return a.isMid ? -1 : 1;
-    return a.idx - b.idx;
+    const role = cc ? getCounterRole(cKey, champ.roles) : champ.roles[0];
+    const sharesRole = cc && champ.roles.some(r => cc.roles.includes(r));
+    return { key: cKey, name: cc ? cc.name : cKey, role, sharesRole, idx: i };
   });
 
   counterList.innerHTML = counters.map((c, i) => {
@@ -163,7 +158,7 @@ function showCounters(key) {
     return `<div class="counter-item">
       <div class="rank ${i < 3 ? 'top3' : ''}">${i + 1}</div>
       <div class="c-name">${c.name}</div>
-      <div class="c-role">${ROLE_LABEL[c.role] || c.role}</div>
+      <div class="c-role${c.sharesRole ? '' : ' off-role'}">${ROLE_LABEL[c.role] || c.role}</div>
       <div class="eff ${effClass}">${effLabel}</div>
     </div>`;
   }).join('');
