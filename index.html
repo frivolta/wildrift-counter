@@ -80,6 +80,21 @@ header p{font-size:11px;color:var(--text2);margin-top:2px}
 .eff-badge.med{background:rgba(245,158,11,0.12);color:var(--orange)}
 .eff-badge.low{background:var(--surface3);color:var(--text2)}
 
+/* Section divider */
+.section-divider{display:flex;align-items:center;gap:10px;padding:14px 4px 8px}
+.section-divider span{font-size:12px;font-weight:700;color:var(--accent2);letter-spacing:0.5px;white-space:nowrap}
+.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Strong against (red tint for items) */
+.counter-item.strong-1{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.06)}
+.counter-item.strong-2{border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.04)}
+.counter-item.strong-3{border-color:rgba(239,68,68,0.15);background:rgba(239,68,68,0.02)}
+.rank-badge.s-top1{background:rgba(239,68,68,0.2);color:var(--red);border:1px solid rgba(239,68,68,0.4)}
+.rank-badge.s-top2{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
+.rank-badge.s-top3{background:rgba(239,68,68,0.1);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)}
+.eff-badge.s-high{background:rgba(239,68,68,0.15);color:var(--red)}
+.eff-badge.s-med{background:rgba(245,158,11,0.12);color:var(--orange)}
+
 /* Overlay dim */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9;opacity:0;pointer-events:none;transition:opacity .25s}
 .overlay.open{opacity:1;pointer-events:auto}
@@ -112,7 +127,7 @@ header p{font-size:11px;color:var(--text2);margin-top:2px}
   <div class="drag-handle"><div class="drag-handle-bar"></div></div>
   <div class="panel-header">
     <div class="panel-header-left">
-      <h2>Counters: <span id="panelName"></span></h2>
+      <h2>Matchups: <span id="panelName"></span></h2>
       <div class="panel-roles" id="panelRoles"></div>
     </div>
     <button class="panel-close" id="panelClose">&times;</button>
@@ -205,7 +220,8 @@ function showCounters(key) {
     return { key: cKey, name: cc ? cc.name : cKey, role, sharesRole, idx: i };
   });
 
-  counterList.innerHTML = counters.map((c, i) => {
+  // "Countered by" section
+  const counteredByHtml = counters.map((c, i) => {
     const effClass = i < 3 ? 'high' : i < 6 ? 'med' : 'low';
     const effLabel = i < 3 ? 'BEST' : i < 6 ? 'GOOD' : 'OK';
     const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
@@ -216,6 +232,41 @@ function showCounters(key) {
       <div class="eff-badge ${effClass}">${effLabel}</div>
     </div>`;
   }).join('');
+
+  // "Strong against" section — reverse lookup
+  const strongAgainst = [];
+  for (const k of champKeys) {
+    if (k === key) continue;
+    const idx = CHAMPIONS[k].counters.indexOf(key);
+    if (idx !== -1) {
+      const cc = CHAMPIONS[k];
+      const role = getCounterRole(k, champ.roles);
+      const sharesRole = champ.roles.some(r => cc.roles.includes(r));
+      strongAgainst.push({ key: k, name: cc.name, role, sharesRole, idx });
+    }
+  }
+  strongAgainst.sort((a, b) => a.idx - b.idx);
+
+  const strongHtml = strongAgainst.length
+    ? strongAgainst.map((c, i) => {
+        const effClass = c.idx < 3 ? 's-high' : c.idx < 6 ? 's-med' : 'low';
+        const effLabel = c.idx < 3 ? 'HARD' : c.idx < 6 ? 'GOOD' : 'SOFT';
+        const rankClass = i === 0 ? 's-top1' : i === 1 ? 's-top2' : i === 2 ? 's-top3' : '';
+        const strongClass = i === 0 ? 'strong-1' : i === 1 ? 'strong-2' : i === 2 ? 'strong-3' : '';
+        return `<div class="counter-item ${strongClass}">
+          <div class="rank-badge ${rankClass}">${i + 1}</div>
+          <div class="c-name">${c.name}</div>
+          <div class="c-role${c.sharesRole ? '' : ' off-role'}">${ROLE_LABEL[c.role] || c.role}</div>
+          <div class="eff-badge ${effClass}">${effLabel}</div>
+        </div>`;
+      }).join('')
+    : '<div style="text-align:center;color:var(--text2);padding:12px;font-size:12px">No data</div>';
+
+  counterList.innerHTML =
+    '<div class="section-divider"><span>WEAK AGAINST</span></div>' +
+    counteredByHtml +
+    '<div class="section-divider"><span>STRONG AGAINST</span></div>' +
+    strongHtml;
 
   panel.classList.add('open');
   overlay.classList.add('open');
