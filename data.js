@@ -145,3 +145,184 @@ const CHAMPIONS = {
   zoe: { name: "Zoe", roles: ["mid"], counters: ["fizz","kassadin","yasuo","zed","katarina","malphite","irelia","renekton","diana","akali"] },
   zyra: { name: "Zyra", roles: ["support"], counters: ["leona","nautilus","thresh","alistar","blitzcrank","pyke","soraka","nami","lulu","janna"] },
 };
+
+// Cross-position counter picks: champions flexed from other roles as counters
+// key = counter champion, asRole = lane to play the counter in
+// Sources: wildriftcounter.com, wr-meta.com, u.gg, community meta knowledge
+const CROSS_COUNTERS = {
+  // --- Mid lane: baron/jungle/duo champions flexed mid ---
+  akali: [
+    { key: "sett", asRole: "mid", note: "Sustain + true damage punishes Akali trades" },
+    { key: "wukong", asRole: "mid", note: "Clone dodges shroud, strong all-in" },
+    { key: "darius", asRole: "mid", note: "Short lane lets Darius zone and all-in" },
+  ],
+  ahri: [
+    { key: "sett", asRole: "mid", note: "Tanks charm, runs her down with W" },
+    { key: "irelia", asRole: "mid", note: "Dashes through charm, wins all-ins" },
+  ],
+  "aurelion-sol": [
+    { key: "sett", asRole: "mid", note: "Ignores poke, all-ins easily" },
+    { key: "wukong", asRole: "mid", note: "Gap close beats ASol spacing" },
+    { key: "irelia", asRole: "mid", note: "Dash-heavy kit disrupts ASol positioning" },
+  ],
+  brand: [
+    { key: "sett", asRole: "mid", note: "Sustain through poke, all-in at 5" },
+    { key: "irelia", asRole: "mid", note: "Dashes dodge skillshots, bursts Brand" },
+  ],
+  corki: [
+    { key: "sett", asRole: "mid", note: "Tanks poke, all-ins short range Corki" },
+    { key: "irelia", asRole: "mid", note: "Stacks passive off minions, all-ins" },
+    { key: "wukong", asRole: "mid", note: "Gap close and burst beats Corki" },
+  ],
+  diana: [
+    { key: "sett", asRole: "mid", note: "True damage and sustain beat Diana trades" },
+    { key: "mordekaiser", asRole: "mid", note: "Ult isolates, shield tanks burst" },
+  ],
+  ekko: [
+    { key: "sett", asRole: "mid", note: "Too tanky to burst, punishes Ekko W" },
+    { key: "mordekaiser", asRole: "mid", note: "Ult removes Ekko from his ult shadow" },
+  ],
+  fizz: [
+    { key: "sett", asRole: "mid", note: "Survives burst, W true damage kills" },
+    { key: "mordekaiser", asRole: "mid", note: "Shield absorbs combo, wins extended trades" },
+  ],
+  kassadin: [
+    { key: "renekton", asRole: "mid", note: "Huge early pressure, denies Kassadin scaling" },
+    { key: "sett", asRole: "mid", note: "Early all-in dominance vs weak early Kass" },
+    { key: "wukong", asRole: "mid", note: "Strong pre-6 pressure, Kassadin can't trade" },
+  ],
+  katarina: [
+    { key: "sett", asRole: "mid", note: "W stops Katarina ult, too tanky to burst" },
+    { key: "mordekaiser", asRole: "mid", note: "Ult isolates, prevents resets" },
+    { key: "wukong", asRole: "mid", note: "Clone disrupts combos, strong all-in" },
+  ],
+  lissandra: [
+    { key: "sett", asRole: "mid", note: "Sustain through poke, all-in threat" },
+  ],
+  lux: [
+    { key: "irelia", asRole: "mid", note: "Dashes dodge everything, punishes immobility" },
+    { key: "wukong", asRole: "mid", note: "Gap close bypasses Lux range" },
+  ],
+  orianna: [
+    { key: "irelia", asRole: "mid", note: "Dashes make ball placement hard" },
+    { key: "wukong", asRole: "mid", note: "All-in beats Orianna spacing" },
+    { key: "sett", asRole: "mid", note: "Runs through poke, all-ins" },
+  ],
+  ryze: [
+    { key: "sett", asRole: "mid", note: "Too tanky for Ryze combos, all-ins" },
+    { key: "irelia", asRole: "mid", note: "Mobility overwhelms Ryze" },
+  ],
+  syndra: [
+    { key: "irelia", asRole: "mid", note: "Dashes through stun, wins all-in" },
+    { key: "wukong", asRole: "mid", note: "Gap close beats Syndra spacing" },
+    { key: "sett", asRole: "mid", note: "Sustain through poke, flash+E kills" },
+  ],
+  "twisted-fate": [
+    { key: "irelia", asRole: "mid", note: "Dashes make gold card hard to land" },
+    { key: "sett", asRole: "mid", note: "Tanks TF damage, all-ins easily" },
+    { key: "wukong", asRole: "mid", note: "Gap close and burst, TF too squishy" },
+  ],
+  veigar: [
+    { key: "irelia", asRole: "mid", note: "Dashes out of cage, all-ins Veigar" },
+    { key: "sett", asRole: "mid", note: "Flash+E through cage, too tanky to burst" },
+  ],
+  "vel-koz": [
+    { key: "irelia", asRole: "mid", note: "Dashes dodge skillshots, kills easily" },
+    { key: "wukong", asRole: "mid", note: "Gap close destroys immobile Vel" },
+    { key: "sett", asRole: "mid", note: "Survives poke, all-ins at close range" },
+  ],
+  vex: [
+    { key: "sett", asRole: "mid", note: "Low mobility champ doesn't proc Vex passive much" },
+    { key: "mordekaiser", asRole: "mid", note: "Shield absorbs burst, wins extended fights" },
+  ],
+  viktor: [
+    { key: "irelia", asRole: "mid", note: "Dashes through gravity field, bursts" },
+    { key: "sett", asRole: "mid", note: "Runs through poke, all-ins" },
+    { key: "wukong", asRole: "mid", note: "Gap close beats Viktor spacing" },
+  ],
+  yasuo: [
+    { key: "rammus", asRole: "mid", note: "Thornmail passive destroys auto-attackers" },
+    { key: "wukong", asRole: "mid", note: "Clone baits wind wall, strong all-in" },
+    { key: "vi", asRole: "mid", note: "Ult goes through wind wall, armor shred" },
+  ],
+  yone: [
+    { key: "sett", asRole: "mid", note: "W true damage, punishes Yone trades" },
+    { key: "rammus", asRole: "mid", note: "Thornmail passive punishes auto-attacks" },
+    { key: "wukong", asRole: "mid", note: "Strong all-in, armor stacks" },
+  ],
+  zed: [
+    { key: "rammus", asRole: "mid", note: "Armor stacking, taunt stops combos" },
+    { key: "wukong", asRole: "mid", note: "Armor + clone baits Zed ult" },
+  ],
+  zoe: [
+    { key: "irelia", asRole: "mid", note: "Dashes dodge bubbles, all-in kills" },
+    { key: "sett", asRole: "mid", note: "Tanks burst, runs Zoe down" },
+    { key: "wukong", asRole: "mid", note: "Gap close punishes Zoe immobility" },
+  ],
+  talon: [
+    { key: "rammus", asRole: "mid", note: "Armor stacking, taunt locks Talon down" },
+  ],
+  // --- Baron lane: duo/mid/jungle champions flexed baron ---
+  aatrox: [
+    { key: "lucian", asRole: "baron", note: "Ranged poke and dash dodge Aatrox Q" },
+  ],
+  camille: [
+    { key: "lucian", asRole: "baron", note: "Ranged harass, dash escapes hookshot" },
+  ],
+  darius: [
+    { key: "lucian", asRole: "baron", note: "Kites Darius, never lets him stack passive" },
+    { key: "tristana", asRole: "baron", note: "Range + jump escapes Darius pull" },
+  ],
+  "dr-mundo": [
+    { key: "lucian", asRole: "baron", note: "Constant poke prevents Mundo healing" },
+  ],
+  garen: [
+    { key: "lucian", asRole: "baron", note: "Kites Garen, denies farm" },
+    { key: "tristana", asRole: "baron", note: "Range advantage, jump escapes engage" },
+  ],
+  gwen: [
+    { key: "tristana", asRole: "baron", note: "Range beats Gwen mist, jump escapes" },
+  ],
+  "k-sante": [
+    { key: "lucian", asRole: "baron", note: "Ranged poke, hard to engage on" },
+  ],
+  mordekaiser: [
+    { key: "lucian", asRole: "baron", note: "Kites in death realm, dodges E" },
+    { key: "tristana", asRole: "baron", note: "Jump out of E, range advantage" },
+  ],
+  nasus: [
+    { key: "lucian", asRole: "baron", note: "Constant harass prevents stacking" },
+    { key: "tristana", asRole: "baron", note: "Zoning + jump prevents Nasus approach" },
+  ],
+  ornn: [
+    { key: "lucian", asRole: "baron", note: "Ranged poke, dodges brittle procs" },
+  ],
+  renekton: [
+    { key: "lucian", asRole: "baron", note: "Kites between dashes, ranged harass" },
+  ],
+  sett: [
+    { key: "lucian", asRole: "baron", note: "Kites Sett, dodges E with dash" },
+  ],
+  sion: [
+    { key: "lucian", asRole: "baron", note: "Constant poke, dash dodges Q" },
+    { key: "tristana", asRole: "baron", note: "Range + jump avoids CC chain" },
+  ],
+  wukong: [
+    { key: "lucian", asRole: "baron", note: "Ranged harass before Wukong can engage" },
+  ],
+  // --- Support: mid/baron champions flexed support ---
+  alistar: [
+    { key: "brand", asRole: "support", note: "Poke burns through Alistar HP before engage" },
+  ],
+  leona: [
+    { key: "brand", asRole: "support", note: "Punishes Leona for going in with AoE damage" },
+    { key: "vel-koz", asRole: "support", note: "Outranges, pokes before engage range" },
+  ],
+  nautilus: [
+    { key: "brand", asRole: "support", note: "Punishes hook engage with burst damage" },
+    { key: "vel-koz", asRole: "support", note: "Outranges hook, pokes from safety" },
+  ],
+  thresh: [
+    { key: "brand", asRole: "support", note: "Punishes flay range with poke" },
+  ],
+};
